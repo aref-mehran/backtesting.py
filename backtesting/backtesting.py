@@ -1253,7 +1253,6 @@ class Backtest:
                  **kwargs) -> Union[pd.Series,
                                     Tuple[pd.Series, pd.Series],
                                     Tuple[pd.Series, pd.Series, dict]]:
-        print('optimize called ............')
         """
         Optimize strategy parameters to an optimal combination.
         Returns result `pd.Series` of the best run.
@@ -1419,7 +1418,6 @@ class Backtest:
                                    for i in range(len(param_batches))]
                         for future in _tqdm(as_completed(futures), total=len(futures),
                                             desc='Backtest.optimize'):
-                            print(future)
                             batch_index, values = future.result()
                             for value, params in zip(values, param_batches[batch_index]):
                                 heatmap[tuple(params.values())] = value
