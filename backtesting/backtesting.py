@@ -1444,9 +1444,10 @@ class Backtest:
             
             best_5_stats=[]
             best_5_params = heatmap.nlargest(5)
-            for params in best_5_params:
-                result = self.run(**dict(zip(heatmap.index.names, params)))
-                best_5_stats.append(result)
+            print(best_5_params)
+            # for params in best_5_params:
+            #     result = self.run(**dict(zip(heatmap.index.names, params)))
+            #     best_5_stats.append(result)
 
 
             if return_heatmap:
