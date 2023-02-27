@@ -33,38 +33,6 @@ def geometric_mean(returns: pd.Series) -> float:
 
 
 
-from functools import total_ordering
-import json
-
-@total_ordering
-class MyState:
-
-    def __init__(self, profit,tradeCount):
-        self.profit = profit
-        self.tradeCount = tradeCount
-
-    def __getstate__(self):
-
-        state = self.__dict__.copy()
-        
-        return state
-
-    def __setstate__(self, state):
-        self.__dict__.update(state)
-    def __lt__(self, other):
-        self['Equity Final [$]'] <other['Equity Final [$]']
-
-    def __eq__(self, other):
-        self['Equity Final [$]'] ==other['Equity Final [$]']
-
-    def __str__(self):
-        return json.dumps(self)
-
-    def __repr__(self):
-
-        return json.dumps(self)
-
-
 def compute_stats(
         trades: Union[List['Trade'], pd.DataFrame],
         equity: np.ndarray,
@@ -173,10 +141,9 @@ def compute_stats(
     s.loc['Expectancy [%]'] = returns.mean() * 100
     s.loc['SQN'] = np.sqrt(n_trades) * pl.mean() / (pl.std() or np.nan)
 
-    minTradeCount_finalEquity = -1000 if s.loc['# Trades'] < 10 else s.loc['Equity Final [$]']
+    minTrade_finalEquity = -1000 if s.loc['# Trades'] < strategy_instance.minTrades else s.loc['Equity Final [$]']
 
-    s.loc['minTradeCount_finalEquity'] = minTradeCount_finalEquity
-    s.loc['minTradeCount_finalEquity_#Trade'] = str(minTradeCount_finalEquity)+"_"+str(s.loc['# Trades'])
+    s.loc['minTrade_finalEquity'] = minTrade_finalEquity
 
     s.loc['Kelly Criterion'] = win_rate - (1 - win_rate) / (pl[pl > 0].mean() / -pl[pl < 0].mean())
 
@@ -184,9 +151,6 @@ def compute_stats(
     s.loc['_equity_curve'] = equity_df
     s.loc['_trades'] = trades_df
 
-
-
-    s.loc['CustomState']=MyState(s.loc['Equity Final [$]'],s.loc['# Trades'])
     s = _Stats(s)
     return s
 
