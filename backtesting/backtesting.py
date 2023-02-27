@@ -1253,6 +1253,7 @@ class Backtest:
                  **kwargs) -> Union[pd.Series,
                                     Tuple[pd.Series, pd.Series],
                                     Tuple[pd.Series, pd.Series, dict]]:
+        print('optimize called ............')
         """
         Optimize strategy parameters to an optimal combination.
         Returns result `pd.Series` of the best run.
