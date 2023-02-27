@@ -151,7 +151,9 @@ def compute_stats(
     s.loc['_equity_curve'] = equity_df
     s.loc['_trades'] = trades_df
 
+
     from functools import total_ordering
+    import json
 
     @total_ordering
     class MyState(_Stats):
@@ -169,14 +171,21 @@ def compute_stats(
         def __setstate__(self, state):
             self.__dict__.update(state)
         def __lt__(self, other):
-            self.loc['Equity Final [$]'] <other.loc['Equity Final [$]']
+            self['Equity Final [$]'] <other['Equity Final [$]']
 
         def __eq__(self, other):
-            self.loc['Equity Final [$]'] ==other.loc['Equity Final [$]']
+            self['Equity Final [$]'] ==other['Equity Final [$]']
 
+        def __str__(self):
+            return json.dumps(self)
 
-    s1=_Stats(s)
-    s.loc['CutomState']=MyState(s1)
+        def __repr__(self):
+
+            return json.dumps(self)
+
+    s.loc['CutomState']=MyState({
+        'Equity Final [$]':s.loc['Equity Final [$]'],
+        '# Trades':s.loc['# Trades']})
     s = _Stats(s)
     return s
 
