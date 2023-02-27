@@ -155,6 +155,19 @@ def compute_stats(
 
     @total_ordering
     class MyState(_Stats):
+
+        def __getstate__(self):
+
+            # this method is called when you are
+            # going to pickle the class, to know what to pickle
+            state = self.__dict__.copy()
+            
+            # don't pickle the parameter fun. otherwise will raise 
+            # AttributeError: Can't pickle local object 'Process.__init__.<locals>.<lambda>'
+            return state
+        
+        def __setstate__(self, state):
+            self.__dict__.update(state)
         def __lt__(self, other):
             self.loc['Equity Final [$]'] <other.loc['Equity Final [$]']
 
