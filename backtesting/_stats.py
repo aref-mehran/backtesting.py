@@ -32,6 +32,39 @@ def geometric_mean(returns: pd.Series) -> float:
     return np.exp(np.log(returns).sum() / (len(returns) or np.nan)) - 1
 
 
+
+from functools import total_ordering
+import json
+
+@total_ordering
+class MyState:
+
+    def __init__(self, profit,tradeCount):
+        self.profit = profit
+        self.tradeCount = tradeCount
+
+    def __getstate__(self):
+
+        state = self.__dict__.copy()
+        
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+    def __lt__(self, other):
+        self['Equity Final [$]'] <other['Equity Final [$]']
+
+    def __eq__(self, other):
+        self['Equity Final [$]'] ==other['Equity Final [$]']
+
+    def __str__(self):
+        return json.dumps(self)
+
+    def __repr__(self):
+
+        return json.dumps(self)
+
+
 def compute_stats(
         trades: Union[List['Trade'], pd.DataFrame],
         equity: np.ndarray,
@@ -152,36 +185,6 @@ def compute_stats(
     s.loc['_trades'] = trades_df
 
 
-    from functools import total_ordering
-    import json
-
-    @total_ordering
-    class MyState:
-
-        def __init__(self, profit,tradeCount):
-            self.profit = profit
-            self.tradeCount = tradeCount
-
-        def __getstate__(self):
-
-            state = self.__dict__.copy()
-            
-            return state
-        
-        def __setstate__(self, state):
-            self.__dict__.update(state)
-        def __lt__(self, other):
-            self['Equity Final [$]'] <other['Equity Final [$]']
-
-        def __eq__(self, other):
-            self['Equity Final [$]'] ==other['Equity Final [$]']
-
-        def __str__(self):
-            return json.dumps(self)
-
-        def __repr__(self):
-
-            return json.dumps(self)
 
     s.loc['CustomState']=MyState(s.loc['Equity Final [$]'],s.loc['# Trades'])
     s = _Stats(s)
