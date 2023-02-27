@@ -143,6 +143,7 @@ def compute_stats(
     minTradeCount_finalEquity = -1000 if s.loc['# Trades'] < 10 else s.loc['Equity Final [$]']
 
     s.loc['minTradeCount_finalEquity'] = minTradeCount_finalEquity
+    s.loc['minTradeCount_finalEquity_#Trade'] = str(minTradeCount_finalEquity)+"_"+str(s.loc['# Trades'])
 
     s.loc['Kelly Criterion'] = win_rate - (1 - win_rate) / (pl[pl > 0].mean() / -pl[pl < 0].mean())
 
