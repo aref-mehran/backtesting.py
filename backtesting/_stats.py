@@ -151,6 +151,19 @@ def compute_stats(
     s.loc['_equity_curve'] = equity_df
     s.loc['_trades'] = trades_df
 
+    from functools import total_ordering
+
+    @total_ordering
+    class MyState(_Stats):
+        def __lt__(self, other):
+            self.loc['Equity Final [$]'] <other.loc['Equity Final [$]']
+
+        def __eq__(self, other):
+            self.loc['Equity Final [$]'] ==other.loc['Equity Final [$]']
+
+
+    s1=_Stats(s)
+    s.loc['CutomState']=MyState(s1)
     s = _Stats(s)
     return s
 
